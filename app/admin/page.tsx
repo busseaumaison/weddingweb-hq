@@ -1,0 +1,1 @@
+import{redirect}from"next/navigation";import{createClient}from"@/lib/supabase/server";import AdminDashboard from"@/components/AdminDashboard";export default async function Admin(){const s=await createClient(),{data:{user}}=await s.auth.getUser();if(!user)redirect("/admin/login");return <AdminDashboard email={user.email||""}/>}
