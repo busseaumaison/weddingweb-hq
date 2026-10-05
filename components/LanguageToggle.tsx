@@ -1,0 +1,1 @@
+"use client";import{useLanguage}from"@/components/LanguageProvider";export default function LanguageToggle(){const{lang,setLang}=useLanguage();return <div className="langToggle"><button className={lang==="fr"?"active":""} onClick={()=>setLang("fr")}>FR</button><button className={lang==="en"?"active":""} onClick={()=>setLang("en")}>EN</button></div>}

@@ -1,0 +1,1 @@
+import{NextResponse}from"next/server";import{createAdminClient}from"@/lib/supabase/admin";export async function GET(){try{const db=createAdminClient(),{data}=await db.from("site_settings").select("menu_open").eq("id",1).single();return NextResponse.json({menuOpen:Boolean(data?.menu_open)})}catch{return NextResponse.json({menuOpen:false})}}
