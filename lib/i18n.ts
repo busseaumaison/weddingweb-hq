@@ -3,6 +3,7 @@ export type Lang = "fr" | "en";
 export const copy = {
   fr: {
     navDay: "La journée",
+    navStory: "Notre histoire",
     navHotel: "Hébergement",
     navPhotos: "Photos",
     navRsvp: "RSVP",
@@ -16,6 +17,24 @@ export const copy = {
 
     countdown: "Le compte à rebours est lancé",
     countdownTitle: "Encore un peu avant le grand jour",
+
+    ourStory: "Notre histoire",
+    storyTitle: "Le chemin jusqu’ici",
+
+    storyText1:
+    "Notre histoire s’est construite au fil des années, à travers les petits bonheurs du quotidien, les projets partagés et tous ces moments qui sont devenus les nôtres.",
+
+    storyText2:
+    "Aujourd’hui, entourés de notre famille et des personnes qui nous sont les plus chères, nous sommes heureux d’écrire la prochaine page de notre histoire avec vous.",
+
+    storyBeginning: "Le début",
+    storyBeginningText: "Nous deux",
+
+    storyFamily: "Notre plus belle aventure",
+    storyFamilyText: "Notre famille",
+
+    storyNext: "La prochaine page",
+    storyNextText: "17 juillet 2027",
 
     days: "Jours",
     hours: "Heures",
@@ -121,6 +140,7 @@ export const copy = {
 
   en: {
     navDay: "Our Day",
+    navStory: "Our Story",
     navHotel: "Accommodation",
     navPhotos: "Photos",
     navRsvp: "RSVP",
@@ -134,6 +154,24 @@ export const copy = {
 
     countdown: "The countdown is on",
     countdownTitle: "Just a little longer until the big day",
+
+    ourStory: "Our story",
+    storyTitle: "The journey that brought us here",
+
+    storyText1:
+    "Our story has grown through the years, through the little joys of everyday life, shared dreams and all the moments that slowly became ours.",
+
+    storyText2:
+    "Today, surrounded by our family and the people who mean the most to us, we are so happy to begin the next chapter of our story with you.",
+
+    storyBeginning: "The beginning",
+    storyBeginningText: "The two of us",
+
+    storyFamily: "Our greatest adventure",
+    storyFamilyText: "Our family",
+
+    storyNext: "The next chapter",
+    storyNextText: "July 17, 2027",
 
     days: "Days",
     hours: "Hours",

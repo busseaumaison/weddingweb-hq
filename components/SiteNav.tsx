@@ -1,1 +1,53 @@
-"use client";import Link from"next/link";import{useLanguage}from"@/components/LanguageProvider";import LanguageToggle from"@/components/LanguageToggle";export default function SiteNav({relative=false}:{relative?:boolean}){const{t}=useLanguage();return <header className="nav" style={relative?{position:"relative"}:undefined}><div className="shell navrow"><Link href="/" className="serif" style={{fontSize:24}}>P & O</Link><nav className="navlinks"><a href="/#journee">{t.navDay}</a><a href="/#hotel">{t.navHotel}</a><a href="/#photos">{t.navPhotos}</a><Link href="/menu">Menu</Link><Link href="/rsvp">{t.navRsvp}</Link></nav><div className="actions"><LanguageToggle/><Link href="/rsvp" className="btn">{t.navRsvp}</Link></div></div></header>}
+"use client";
+
+import Link from "next/link";
+
+import { useLanguage } from "@/components/LanguageProvider";
+import LanguageToggle from "@/components/LanguageToggle";
+
+export default function SiteNav({
+  relative = false,
+}: {
+  relative?: boolean;
+}) {
+  const { t } = useLanguage();
+
+  return (
+    <header
+      className="nav"
+      style={relative ? { position: "relative" } : undefined}
+    >
+      <div className="shell navrow">
+        <Link
+          href="/"
+          className="serif"
+          style={{ fontSize: 24 }}
+        >
+          O & P
+        </Link>
+
+        <nav className="navlinks">
+          <a href="/#histoire">{t.navStory}</a>
+
+          <a href="/#journee">{t.navDay}</a>
+
+          <a href="/#hotel">{t.navHotel}</a>
+
+          <a href="/#photos">{t.navPhotos}</a>
+
+          <Link href="/menu">Menu</Link>
+
+          <Link href="/rsvp">{t.navRsvp}</Link>
+        </nav>
+
+        <div className="actions">
+          <LanguageToggle />
+
+          <Link href="/rsvp" className="btn">
+            {t.navRsvp}
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
