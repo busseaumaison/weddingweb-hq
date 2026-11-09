@@ -24,6 +24,8 @@ export async function GET() {
           preferred_language,
           rsvp_completed_at,
           invited_pre_wedding_dinner,
+          invited_rehearsal,
+          hotel_stay,
           created_at,
           family_emails(
             id,
@@ -37,6 +39,9 @@ export async function GET() {
             allergies_intolerances,
             food_aversions,
             pre_wedding_dinner_attending,
+            rehearsal_attending,
+            pre_wedding_dinner_unsure,
+            rehearsal_unsure,
             menu_option_id,
             menu_completed_at,
             sort_order

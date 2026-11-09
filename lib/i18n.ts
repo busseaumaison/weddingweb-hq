@@ -22,10 +22,19 @@ export const copy = {
     storyTitle: "Le chemin jusqu’ici",
 
     storyText1:
-    "Notre histoire s’est construite au fil des années, à travers les petits bonheurs du quotidien, les projets partagés et tous ces moments qui sont devenus les nôtres.",
+    "**2011**. Deux jeunes adultes font leur entrée au cégep. Assis dans une classe de philo, quelques regards s'échangent, mais peu de mots. À ce moment-là, nous étions loin de nous douter que les premières lignes de notre histoire étaient déjà en train de s'écrire.",
 
     storyText2:
-    "Aujourd’hui, entourés de notre famille et des personnes qui nous sont les plus chères, nous sommes heureux d’écrire la prochaine page de notre histoire avec vous.",
+    "**Deux ans plus tard**, le hasard fait à nouveau croiser nos chemins. Cette rencontre inattendue nous amène à reprendre contact, puis à nous donner rendez-vous. Un premier rendez-vous, une connexion instantannée et cette douce évidence que quelque chose de spécial venait de commencer.",
+
+    storyText3:
+    "Depuis, nous avons grandi ensemble, construit nos projets et franchi de merveilleuses étapes, dont la plus belle de toutes: l'arrivée de notre précieuse Florence.",
+
+    storyText4:
+    "**Aujourd'hui**, nous sommes prêts à écrire un nouveau chapitre de notre histoire. Et quoi de plus beau que de le célébrer entourés des gens qui nous sont chers?",
+
+    storyText5:
+    "C'est avec beaucoup d'amour, de bonheur et d'excitation que nous vous invitons à partager cette journée si spéciale avec nous!",
 
     storyBeginning: "Le début",
     storyBeginningText: "Nous deux",
@@ -53,12 +62,12 @@ export const copy = {
     accommodation: "Hébergement",
     sleep: "Dormir sur place",
     hotelText:
-      "Les informations du bloc de chambres et le lien officiel de réservation seront disponibles ici.",
-    seeHotel: "Voir L'Estérel",
+      "Un lien de réservation personnalisé est disponible pour notre groupe de mariage. Choisissez les dates et la durée de votre séjour avant de confirmer.",
+    seeHotel: "Réserver une chambre",
 
     weekend: "Prolonger le week-end",
     weekendText:
-      "Code de groupe, dates, heures d'arrivée et détails logistiques pourront être ajoutés ici.",
+      "Profitez du week-end avec nous à l’Estérel! Le bouton de réservation ouvre notre lien de groupe.",
 
     memories: "Vos souvenirs",
     guestPhotos: "Photos des invités",
@@ -159,10 +168,19 @@ export const copy = {
     storyTitle: "The journey that brought us here",
 
     storyText1:
-    "Our story has grown through the years, through the little joys of everyday life, shared dreams and all the moments that slowly became ours.",
+    "**2011**. Two young adults begin their journey at cegep. Sitting in a philosophy class, a few glances are exchanged, but very few words. Little did we kow that the first pages of our love story were already being written.",
 
     storyText2:
-    "Today, surrounded by our family and the people who mean the most to us, we are so happy to begin the next chapter of our story with you.",
+    "**Two years later**, fate brings our paths together once again. This unexpected encounter leads us to reconnect and eventually make plans to see each other. One first date, an instant connection, and that wonderful feeling something special had just begun.",
+    
+    storyText3:
+    "Since then, we have grown together, built our dreams, and shared countless beautiful milestones, the greatest of all being the arrival of our precious Florence.",
+
+    storyText4:
+    "**Today**, we are ready to write a new chapter of our story. And what could be more beautiful than celebrating it surrounded by the people we hold dear?",
+
+    storyText5:
+    "With hearts full of love, happiness and excitement, we invite you to share this very special day with us!",
 
     storyBeginning: "The beginning",
     storyBeginningText: "The two of us",
@@ -192,13 +210,13 @@ export const copy = {
     sleep: "Stay with us",
 
     hotelText:
-      "Room block information and the official booking link will be available here.",
+      "Our group has a personalized booking link. Please select your dates and length of stay before confirming your reservation.",
 
-    seeHotel: "View Estérel",
+    seeHotel: "Book a room",
 
     weekend: "Make a weekend of it",
     weekendText:
-      "Group code, dates, check-in times and practical details can be added here.",
+      "Make a weekend of it at Estérel! Use our group booking link to book your stay.",
 
     memories: "Your memories",
     guestPhotos: "Guest photos",

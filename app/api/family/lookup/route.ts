@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const { data: family, error: familyError } = await db
       .from("families")
       .select(
-        "id,name,code,preferred_language,rsvp_completed_at,invited_pre_wedding_dinner"
+        "id,name,code,preferred_language,rsvp_completed_at,invited_pre_wedding_dinner,invited_rehearsal,hotel_stay"
       )
       .eq("code", normalized)
       .maybeSingle();
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       db
         .from("guests")
         .select(
-          "id,first_name,last_name,attending,allergies_intolerances,food_aversions,pre_wedding_dinner_attending"
+          "id,first_name,last_name,attending,allergies_intolerances,food_aversions,pre_wedding_dinner_attending,rehearsal_attending,pre_wedding_dinner_unsure,rehearsal_unsure"
         )
         .eq("family_id", family.id)
         .order("sort_order"),

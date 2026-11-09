@@ -64,33 +64,37 @@ export default function HomeContent() {
 
       {/* NOTRE HISTOIRE */}
       <section id="histoire" className="section">
-        <div className="shell grid2">
+        <div className="shell grid4">
           <div>
             <div className="eyebrow">{t.ourStory}</div>
 
             <h2 className="serif title">{t.storyTitle}</h2>
-
-            <p
-              className="muted"
-              style={{
-                fontSize: 17,
-                lineHeight: 1.8,
-                maxWidth: 560,
-              }}
-            >
-              {t.storyText1}
-            </p>
-
-            <p
-              className="muted"
-              style={{
-                fontSize: 17,
-                lineHeight: 1.8,
-                maxWidth: 560,
-              }}
-            >
-              {t.storyText2}
-            </p>
+            
+            {[
+              t.storyText1,
+              t.storyText2,
+              t.storyText3,
+              t.storyText4,
+              t.storyText5,
+            ].map((paragraph, index) => (
+              <p
+                key={index}
+                className="muted"
+                style={{
+                  fontSize: 17,
+                  lineHeight: 2.0,
+                  maxWidth: 580,
+                }}
+              >
+                {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+                  part.startsWith("**") && part.endsWith("**") ? (
+                    <strong key={i}>{part.slice(2, -2)}</strong>
+                  ) : (
+                    part
+                  )
+                )}
+              </p>
+            ))}
 
             <div
               style={{
@@ -167,12 +171,12 @@ export default function HomeContent() {
 
             <div className="timeline">
               <div>
-                <strong>15 h 00</strong>
+                <strong>16 h 00</strong>
                 <div className="muted">{t.ceremony}</div>
               </div>
 
               <div>
-                <strong>16 h 00</strong>
+                <strong>17 h 00</strong>
                 <div className="muted">{t.cocktail}</div>
               </div>
 
@@ -202,9 +206,9 @@ export default function HomeContent() {
 
             <a
               className="btn btnDark"
-              href="https://www.esterel.com/"
+              href="https://res.esterel.com/ibe/details.aspx?propertyid=17969&nights=1&checkin=16/7/2027&group=7102329&lang=fr-fr"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               {t.seeHotel}
             </a>

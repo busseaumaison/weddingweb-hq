@@ -150,6 +150,7 @@ export async function POST(request: Request) {
               .update({
                 pre_wedding_dinner_attending:
                   null,
+                pre_wedding_dinner_unsure: false,
                 updated_at:
                   new Date().toISOString(),
               })
@@ -158,6 +159,44 @@ export async function POST(request: Request) {
           if (guestError) throw guestError;
         }
 
+        break;
+      }
+
+      case "toggle_rehearsal": {
+        const familyId = String(b.family_id || "");
+        if (!familyId) {
+          return NextResponse.json({ error: "family_id_required" }, { status: 400 });
+        }
+        const invited = b.invited === true;
+        const { error } = await db
+          .from("families")
+          .update({ invited_rehearsal: invited, updated_at: new Date().toISOString() })
+          .eq("id", familyId);
+        if (error) throw error;
+        if (!invited) {
+          const { error: guestError } = await db
+            .from("guests")
+            .update({ rehearsal_attending: null, rehearsal_unsure: false, updated_at: new Date().toISOString() })
+            .eq("family_id", familyId);
+          if (guestError) throw guestError;
+        }
+        break;
+      }
+
+      case "set_family_language": {
+        const familyId = String(b.family_id || "");
+        const language = b.language;
+        if (!familyId || (language !== "fr" && language !== "en")) {
+          return NextResponse.json(
+            { error: "invalid_family_language" },
+            { status: 400 }
+          );
+        }
+        const { error } = await db
+          .from("families")
+          .update({ preferred_language: language, updated_at: new Date().toISOString() })
+          .eq("id", familyId);
+        if (error) throw error;
         break;
       }
 

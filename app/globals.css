@@ -787,20 +787,22 @@ button {
 /* GALERIE                                          */
 /* ------------------------------------------------ */
 
+
 .gallery {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 12px;
+  display: block;
+  columns: 3;
+  column-gap: 16px;
 }
 
 .gallery img {
   width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  display: block;
 
-  aspect-ratio: 1;
-
-  object-fit: cover;
+  margin-bottom: 16px;
+  break-inside: avoid;
 
   filter: saturate(0.92);
 
@@ -810,10 +812,23 @@ button {
 }
 
 .gallery img:hover {
-  transform: scale(1.015);
-
   filter: saturate(1);
 }
+
+/* Tablettes */
+@media (max-width: 900px) {
+  .gallery {
+    columns: 2;
+  }
+}
+
+/* Téléphones */
+@media (max-width: 600px) {
+  .gallery {
+    columns: 1;
+  }
+}
+
 
 
 /* ------------------------------------------------ */
@@ -1112,7 +1127,6 @@ button {
     gap: 42px;
   }
 
-  .gallery,
   .photoAdmin,
   .menuGrid {
     grid-template-columns: 1fr 1fr;
@@ -1138,16 +1152,6 @@ button {
   .shell {
     padding-left: 17px;
     padding-right: 17px;
-  }
-
-  .gallery,
-  .photoAdmin,
-  .menuGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats {
-    grid-template-columns: 1fr 1fr;
   }
 
   .card {

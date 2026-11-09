@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fichiers locaux d'installation du sondage mariage
+/mariage_2027_update/

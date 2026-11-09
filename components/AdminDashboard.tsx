@@ -130,6 +130,18 @@ export default function AdminDashboard({
             Mariage 2027
           </h1>
 
+          {/* Prévisions des chambres : une réponse par famille */}
+          <div className="card" style={{ marginBottom: 24 }}>
+            <strong>Prévisions de séjour à l’Estérel (par famille)</strong>
+            <p className="muted" style={{ marginBottom: 0 }}>
+              0 nuit : {data.families.filter((f: any) => f.hotel_stay === "0").length} famille(s) ·{" "}
+              1 nuit : {data.families.filter((f: any) => f.hotel_stay === "1").length} famille(s) ·{" "}
+              2 nuits ou plus : {data.families.filter((f: any) => f.hotel_stay === "2plus").length} famille(s) ·{" "}
+              À confirmer : {data.families.filter((f: any) => f.hotel_stay === "unsure").length} famille(s) ·{" "}
+              Sans réponse : {data.families.filter((f: any) => !f.hotel_stay).length} famille(s)
+            </p>
+          </div>
+
           {/* STATISTIQUES DU MARIAGE */}
 
           <div className="stats">
@@ -785,6 +797,27 @@ function FamilyAdminCard({
         </button>
       </div>
 
+      {/* Langue d'accueil : se règle par famille dans l'administration */}
+      <div className="hr" />
+      <div className="field" style={{ maxWidth: 300 }}>
+        <label>Langue de cette famille</label>
+        <select
+          className="input"
+          value={family.preferred_language === "en" ? "en" : "fr"}
+          onChange={(e) => action({
+            action: "set_family_language",
+            family_id: family.id,
+            language: e.target.value,
+          })}
+        >
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+        <div className="muted" style={{ fontSize: 13, marginTop: 5 }}>
+          La langue sera appliquée dès que la famille saisira son code d’invitation.
+        </div>
+      </div>
+
       {/* SOUPER DE LA VEILLE */}
 
       <div className="hr" />
@@ -882,7 +915,9 @@ function FamilyAdminCard({
                       : g.pre_wedding_dinner_attending ===
                           false
                         ? "✕ Absent"
-                        : "— En attente"}
+                        : g.pre_wedding_dinner_unsure
+                          ? "À confirmer"
+                          : "— En attente"}
                   </strong>
                 </div>
               ))}
@@ -910,6 +945,60 @@ function FamilyAdminCard({
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {/* Hébergement : toujours visible pour toutes les familles */}
+      <div className="hr" />
+      <div className="familyHead" style={{ alignItems: "center", gap: 16 }}>
+        <div>
+          <strong>Prévision d’hébergement</strong>
+          <div className="muted" style={{ fontSize: 13, marginTop: 5 }}>
+            Une réponse par famille
+          </div>
+        </div>
+        <strong>{({
+          "0": "0 nuit",
+          "1": "1 nuit",
+          "2plus": "2 nuits ou plus",
+          "unsure": "À confirmer",
+        } as Record<string, string>)[family.hotel_stay] || "Sans réponse"}</strong>
+      </div>
+
+      {/* Répétition : invitation indépendante du souper de la veille */}
+      <div className="hr" />
+      <div className="familyHead" style={{ alignItems: "center", gap: 20 }}>
+        <div>
+          <strong>Répétition du mariage</strong>
+          <div className="muted" style={{ fontSize: 13, marginTop: 5 }}>
+            Samedi 10 juillet 2027 · souper offert
+          </div>
+        </div>
+        <button
+          type="button"
+          className={"btn " + (family.invited_rehearsal ? "btnDark" : "")}
+          onClick={() => action({
+            action: "toggle_rehearsal",
+            family_id: family.id,
+            invited: !family.invited_rehearsal,
+          })}
+        >
+          {family.invited_rehearsal ? "✓ Invitée" : "Non invitée"}
+        </button>
+      </div>
+      {family.invited_rehearsal && (
+        <div style={{ marginTop: 18, padding: 18, background: "var(--sand)", borderRadius: 12 }}>
+          <div className="eyebrow" style={{ marginBottom: 12 }}>Réponses à la répétition</div>
+          {sortedGuests.map((g: any) => (
+            <div key={`rehearsal-${g.id}`} className="familyHead" style={{ padding: "6px 0" }}>
+              <span>{g.first_name} {g.last_name || ""}</span>
+              <strong>
+                {g.rehearsal_attending === true ? "✓ Présent"
+                  : g.rehearsal_attending === false ? "✕ Absent"
+                  : g.rehearsal_unsure ? "À confirmer" : "En attente"}
+              </strong>
+            </div>
+          ))}
         </div>
       )}
 
