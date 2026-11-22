@@ -1192,3 +1192,22 @@ button {
     transition: none !important;
   }
 }
+/* RSVP : aquarelle botanique douce, sans texte de l'invitation. */
+.rsvpBackdrop {
+  position:relative;
+  background-image: linear-gradient(rgba(247,242,236,.50),rgba(247,242,236,.50)),url("/images/rsvp-botanical.svg");
+  background-position:center top;
+  background-repeat:repeat-y;
+  background-size:cover;
+}
+.rsvpBackdrop>.shell {position:relative;z-index:1}
+.rsvpBackdrop .form {background:rgba(255,253,249,.94);backdrop-filter:blur(3px)}
+/* Galerie : légendes visibles sur survol clavier et téléphone. */
+.galleryItem {position:relative;margin:0 0 16px;break-inside:avoid;overflow:hidden;border-radius:5px;background:var(--paper)}
+.galleryItem img {margin:0;width:100%;display:block;height:auto}
+.galleryCaption {position:absolute;inset:auto 0 0;padding:18px;background:linear-gradient(transparent,rgba(36,28,24,.86));color:#fff;display:flex;flex-direction:column;gap:5px;opacity:0;transform:translateY(7px);transition:opacity .25s,transform .25s;max-height:100%;overflow:auto}
+.galleryCaption span {font-size:13px;line-height:1.5}
+.galleryItem:hover .galleryCaption,.galleryItem:focus .galleryCaption,.galleryItem:focus-within .galleryCaption {opacity:1;transform:none}
+@media (hover:none), (max-width:600px) {
+ .galleryCaption {position:static;opacity:1;transform:none;background:#f1e6dc;color:var(--espresso);padding:12px 14px}
+}
