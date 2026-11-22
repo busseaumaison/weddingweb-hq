@@ -9,6 +9,8 @@ type Guest = {
   first_name: string;
   last_name: string | null;
   attending: boolean | null;
+  is_child: boolean;
+  child_age: number | null;
   allergies_intolerances: string | null;
   food_aversions: string | null;
   pre_wedding_dinner_attending: boolean | null;
@@ -26,6 +28,9 @@ type Lookup = {
     invited_pre_wedding_dinner: boolean;
     invited_rehearsal: boolean;
     hotel_stay: HotelStay | null;
+    song_suggestion: string | null;
+    message_to_couple: string | null;
+    shared_memory: string | null;
   };
   guests: Guest[];
   emails: { id: string; email: string }[];
@@ -41,6 +46,9 @@ export default function FamilyRsvp() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [emails, setEmails] = useState<string[]>([""]);
   const [hotelStay, setHotelStay] = useState<HotelStay | "">("");
+  const [song, setSong] = useState("");
+  const [coupleMessage, setCoupleMessage] = useState("");
+  const [memory, setMemory] = useState("");
   const [status, setStatus] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -134,6 +142,9 @@ export default function FamilyRsvp() {
       setGuests(p.guests);
       setEmails(p.emails.length ? p.emails.map((x) => x.email) : [""]);
       setHotelStay(p.family.hotel_stay ?? "");
+      setSong(p.family.song_suggestion ?? "");
+      setCoupleMessage(p.family.message_to_couple ?? "");
+      setMemory(p.family.shared_memory ?? "");
     } catch {
       setStatus(t.genericError);
     } finally {
@@ -186,6 +197,10 @@ export default function FamilyRsvp() {
         : "Please answer the rehearsal question for each guest.");
       return;
     }
+    if (guests.some(g => g.is_child && g.attending && (g.child_age === null || !Number.isInteger(g.child_age) || g.child_age < 0 || g.child_age > 17))) {
+      setStatus(fr ? "Merci d’indiquer l’âge de chaque enfant présent (0 à 17 ans)." : "Please enter the age of each attending child (0–17).");
+      return;
+    }
     const clean: string[] = [...new Set<string>(emails.map((x) => x.trim().toLowerCase()).filter(Boolean))];
     if (!clean.length || clean.some((x) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x))) {
       setStatus(t.needEmail);
@@ -202,9 +217,13 @@ export default function FamilyRsvp() {
           language: lang,
           emails: clean,
           hotelStay,
+          songSuggestion: song,
+          messageToCouple: coupleMessage,
+          sharedMemory: memory,
           guests: guests.map((g) => ({
             id: g.id,
             attending: g.attending,
+            childAge: g.is_child ? g.child_age : null,
             allergies: g.allergies_intolerances || "",
             aversions: g.food_aversions || "",
             preWeddingDinnerAttending: data.family.invited_pre_wedding_dinner
@@ -316,6 +335,15 @@ export default function FamilyRsvp() {
             <button type="button" className={"choice " + (g.attending === false ? "selected" : "")}
               onClick={() => updateGuest(g.id, { attending: false })}>✕ {t.absent}</button>
           </div>
+          {g.is_child && g.attending === true && (
+            <div className="field" style={{ marginTop: 16 }}>
+              <label htmlFor={`child-age-${g.id}`}>{fr ? "Âge de l’enfant au 17 juillet 2027" : "Child’s age on July 17, 2027"}</label>
+              <select id={`child-age-${g.id}`} className="input" value={g.child_age ?? ""} onChange={(e) => updateGuest(g.id, { child_age: e.target.value === "" ? null : Number(e.target.value) })}>
+                <option value="">{fr ? "Choisir l’âge" : "Choose age"}</option>
+                {Array.from({ length: 18 }, (_, i) => <option key={i} value={i}>{i} {fr ? (i === 1 ? "an" : "ans") : (i === 1 ? "year" : "years")}</option>)}
+              </select>
+            </div>
+          )}
           {g.attending === true && (
             <div style={{ marginTop: 20 }}>
               <div className="field">
@@ -396,6 +424,18 @@ export default function FamilyRsvp() {
           ))}
         </>
       )}
+
+      {/* Souvenirs et musique : une réponse par famille, questions facultatives */}
+      <div className="hr" />
+      <div className="eyebrow">{fr ? "Une touche personnelle" : "A personal touch"}</div>
+      <h3 className="serif" style={{ fontSize: 32, marginTop: 12 }}>{fr ? "Partagez un peu de vous avec nous" : "Share a little something with us"}</h3>
+      <p className="muted">{fr ? "Ces questions sont facultatives, mais elles nous feraient très plaisir!" : "These questions are optional, but we would love your answers!"}</p>
+      <div className="field"><label htmlFor="song-suggestion">{fr ? "Une chanson pour nous faire danser?" : "A song to get us dancing?"}</label>
+        <input id="song-suggestion" className="input" maxLength={250} value={song} onChange={e => setSong(e.target.value)} placeholder={fr ? "Titre et artiste" : "Song title and artist"} /></div>
+      <div className="field"><label htmlFor="couple-message">{fr ? "Un petit mot pour les futurs mariés" : "A note for the newlyweds"}</label>
+        <textarea id="couple-message" className="input textarea" maxLength={2000} value={coupleMessage} onChange={e => setCoupleMessage(e.target.value)} /></div>
+      <div className="field"><label htmlFor="shared-memory">{fr ? "Une anecdote ou un beau souvenir avec nous" : "A funny story or favorite memory with us"}</label>
+        <textarea id="shared-memory" className="input textarea" maxLength={2000} value={memory} onChange={e => setMemory(e.target.value)} /></div>
 
       {/* Courriels du RSVP existant */}
       <div className="hr" />
