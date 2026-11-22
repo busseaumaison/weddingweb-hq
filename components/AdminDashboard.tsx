@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import RsvpOverview from "@/components/RsvpOverview";
 
 export default function AdminDashboard({
   email,
@@ -186,6 +187,8 @@ export default function AdminDashboard({
               Sans réponse
             </div>
           </div>
+
+          <RsvpOverview families={data.families} menuOptions={data.menuOptions} />
 
           {/* ONGLETS */}
 
@@ -640,57 +643,7 @@ export default function AdminDashboard({
                     );
 
                 return (
-                  <article
-                    className="card"
-                    key={p.id}
-                  >
-                    <img
-                      src={url.publicUrl}
-                      alt={
-                        p.caption ||
-                        p.guest_name
-                      }
-                    />
-
-                    <h3>{p.guest_name}</h3>
-
-                    <p className="muted">
-                      {p.caption ||
-                        "Sans légende"}
-                    </p>
-
-                    <div className="actions">
-                      <button
-                        className="btn btnDark"
-                        onClick={() =>
-                          action({
-                            action:
-                              "photo_approve",
-                            id: p.id,
-                            approved:
-                              !p.approved,
-                          })
-                        }
-                      >
-                        {p.approved
-                          ? "Masquer"
-                          : "Approuver"}
-                      </button>
-
-                      <button
-                        className="btn btnDanger"
-                        onClick={() =>
-                          action({
-                            action:
-                              "photo_delete",
-                            id: p.id,
-                          })
-                        }
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  </article>
+                  <PhotoAdminCard key={p.id} photo={p} action={action} imageUrl={url.publicUrl} />
                 );
               })}
             </div>
@@ -718,6 +671,7 @@ function FamilyAdminCard({
   });
 
   const [email, setEmail] = useState("");
+  const [isChild, setIsChild] = useState(false);
 
   const sortedGuests = [
     ...(family.guests || []),
@@ -1024,6 +978,7 @@ function FamilyAdminCard({
                 : "?"}
           </span>
 
+          <div style={{display:"flex",alignItems:"center",gap:10}}><label style={{fontSize:13}}><input type="checkbox" checked={Boolean(g.is_child)} onChange={e=>action({action:"set_child",id:g.id,is_child:e.target.checked})} /> Enfant {g.is_child&&g.child_age!==null?`(${g.child_age} ans)`:""}</label>
           <button
             onClick={() =>
               action({
@@ -1033,7 +988,7 @@ function FamilyAdminCard({
             }
           >
             ×
-          </button>
+          </button></div>
         </div>
       ))}
 
@@ -1073,11 +1028,13 @@ function FamilyAdminCard({
           />
         </div>
 
+        <label style={{alignSelf:"center",whiteSpace:"nowrap"}}><input type="checkbox" checked={isChild} onChange={e=>setIsChild(e.target.checked)}/> Enfant</label>
         <button
           className="btn"
           onClick={async () => {
             const x = await action({
               action: "add_guest",
+              is_child:isChild,
               family_id: family.id,
               ...guest,
               sort_order:
@@ -1090,6 +1047,7 @@ function FamilyAdminCard({
                 first_name: "",
                 last_name: "",
               });
+              setIsChild(false);
             }
           }}
         >
@@ -1161,4 +1119,18 @@ function FamilyAdminCard({
       </div>
     </div>
   );
+}
+function PhotoAdminCard({photo,action,imageUrl}:{photo:any;action:(body:any)=>Promise<any>;imageUrl:string}){
+  const [name,setName]=useState(photo.guest_name||"");
+  const [caption,setCaption]=useState(photo.caption||"");
+  return <article className="card" style={{padding:16}}>
+    <img src={imageUrl} alt={caption||name}/>
+    <div className="field" style={{marginTop:12}}><label>Photo partagée par</label><input className="input" maxLength={120} value={name} onChange={e=>setName(e.target.value)}/></div>
+    <div className="field"><label>Description</label><textarea className="input textarea" maxLength={1000} value={caption} onChange={e=>setCaption(e.target.value)}/></div>
+    <button type="button" className="btn" style={{marginBottom:10}} onClick={()=>action({action:"photo_edit",id:photo.id,guest_name:name,caption})}>Enregistrer les informations</button>
+    <div className="actions">
+      <button type="button" className="btn btnDark" onClick={async()=>{const saved=await action({action:"photo_edit",id:photo.id,guest_name:name,caption});if(saved)await action({action:"photo_approve",id:photo.id,approved:!photo.approved})}}>{photo.approved?"Masquer":"Enregistrer et approuver"}</button>
+      <button type="button" className="btn btnDanger" onClick={()=>{if(confirm("Supprimer cette photo définitivement?"))action({action:"photo_delete",id:photo.id})}}>Supprimer</button>
+    </div>
+  </article>
 }
