@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 const WEDDING_DATE = new Date(
-  "2027-07-17T15:00:00-04:00"
+  "2027-07-17T16:00:00-04:00"
 ).getTime();
 
 type TimeLeft = {

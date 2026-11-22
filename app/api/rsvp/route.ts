@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendAdminNotification } from "@/lib/notifications";
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const hotelValues = new Set(["0", "1", "2plus", "unsure"]);
@@ -16,6 +17,12 @@ export async function POST(request: Request) {
       .map((value) => String(value).trim().toLowerCase())
       .filter(emailOk))];
     const responses: any[] = Array.isArray(body.guests) ? body.guests : [];
+    const songSuggestion = String(body.songSuggestion ?? "").trim();
+    const messageToCouple = String(body.messageToCouple ?? "").trim();
+    const sharedMemory = String(body.sharedMemory ?? "").trim();
+    if (songSuggestion.length > 250 || messageToCouple.length > 2000 || sharedMemory.length > 2000) {
+      return NextResponse.json({ error: "text_too_long" }, { status: 400 });
+    }
 
     if (!familyId || !code || !emails.length || emails.length > 20 ||
         !hotelValues.has(hotelStay) || code.length > 80) {
@@ -25,7 +32,7 @@ export async function POST(request: Request) {
     const db = createAdminClient();
     const { data: family, error: familyError } = await db
       .from("families")
-      .select("id,code,invited_pre_wedding_dinner,invited_rehearsal")
+      .select("id,name,code,rsvp_completed_at,invited_pre_wedding_dinner,invited_rehearsal")
       .eq("id", familyId)
       .eq("code", code)
       .maybeSingle();
@@ -37,11 +44,12 @@ export async function POST(request: Request) {
 
     const { data: invited, error: guestsError } = await db
       .from("guests")
-      .select("id")
+      .select("id,is_child")
       .eq("family_id", familyId);
     if (guestsError) throw guestsError;
 
     const permittedIds = new Set((invited ?? []).map((guest) => guest.id));
+    const childIds = new Set((invited ?? []).filter(g => g.is_child).map(g => g.id));
     if (!invited?.length || responses.length !== invited.length) {
       return NextResponse.json({ error: "incomplete" }, { status: 400 });
     }
@@ -54,6 +62,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "invalid_guest" }, { status: 400 });
       }
       encountered.add(id);
+      if (childIds.has(id) && response.attending === true && (!Number.isInteger(response.childAge) || response.childAge < 0 || response.childAge > 17)) {
+        return NextResponse.json({ error: "invalid_child_age" }, { status: 400 });
+      }
       for (const field of ["preWeddingDinnerAttending", "rehearsalAttending"]) {
         if (response[field] != null && typeof response[field] !== "boolean") {
           return NextResponse.json({ error: "invalid_response" }, { status: 400 });
@@ -81,6 +92,7 @@ export async function POST(request: Request) {
     for (const response of responses) {
       const update = {
         attending: response.attending,
+        child_age: childIds.has(response.id) && response.attending ? response.childAge : null,
         allergies_intolerances: response.attending
           ? String(response.allergies || "").trim() || null : null,
         food_aversions: response.attending
@@ -113,6 +125,9 @@ export async function POST(request: Request) {
     const { error: familyUpdateError } = await db.from("families")
       .update({
         hotel_stay: hotelStay,
+        song_suggestion: songSuggestion || null,
+        message_to_couple: messageToCouple || null,
+        shared_memory: sharedMemory || null,
 
         rsvp_completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -120,6 +135,11 @@ export async function POST(request: Request) {
       .eq("id", familyId);
     if (familyUpdateError) throw familyUpdateError;
 
+    // Une notification ne doit jamais empêcher l’enregistrement d’un RSVP.
+    await sendAdminNotification({
+      subject: family.rsvp_completed_at ? "RSVP modifié" : "Nouveau RSVP",
+      message: `Famille : ${family.name}. ${responses.filter(g => g.attending).length} présent(s) sur ${responses.length}. Consultez l’administration pour les détails.`,
+    });
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "server_error" }, { status: 500 });

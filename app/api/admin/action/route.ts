@@ -200,6 +200,25 @@ export async function POST(request: Request) {
         break;
       }
 
+      case "set_child": {
+        const id=String(b.id||"");
+        if(!id) return NextResponse.json({error:"id_required"},{status:400});
+        const child=b.is_child===true;
+        const {error}=await db.from("guests").update({is_child:child,child_age:child?null:null,updated_at:new Date().toISOString()}).eq("id",id);
+        if(error) throw error;
+        break;
+      }
+
+      case "photo_edit": {
+        const id=String(b.id||"");
+        const guest_name=String(b.guest_name||"").trim();
+        const caption=String(b.caption||"").trim();
+        if(!id||!guest_name||guest_name.length>120||caption.length>1000) return NextResponse.json({error:"invalid_photo_fields"},{status:400});
+        const {error}=await db.from("photos").update({guest_name,caption:caption||null}).eq("id",id);
+        if(error) throw error;
+        break;
+      }
+
       case "add_guest": {
         const first = String(
           b.first_name || ""
@@ -216,6 +235,7 @@ export async function POST(request: Request) {
           .from("guests")
           .insert({
             family_id: b.family_id,
+            is_child: b.is_child===true,
             first_name: first,
             last_name:
               String(b.last_name || "").trim() ||

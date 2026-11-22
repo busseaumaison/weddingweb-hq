@@ -26,6 +26,9 @@ export async function GET() {
           invited_pre_wedding_dinner,
           invited_rehearsal,
           hotel_stay,
+          song_suggestion,
+          message_to_couple,
+          shared_memory,
           created_at,
           family_emails(
             id,
@@ -36,6 +39,8 @@ export async function GET() {
             first_name,
             last_name,
             attending,
+            is_child,
+            child_age,
             allergies_intolerances,
             food_aversions,
             pre_wedding_dinner_attending,
