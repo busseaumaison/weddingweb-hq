@@ -1192,16 +1192,30 @@ button {
     transition: none !important;
   }
 }
-/* RSVP : aquarelle botanique douce, sans texte de l'invitation. */
+/* RSVP : paysage de l'invitation sans texte ni cadre, volontairement adouci.
+   Si le JPG n'est pas encore présent, l'ancien décor SVG reste visible. */
 .rsvpBackdrop {
-  position:relative;
-  background-image: linear-gradient(rgba(247,242,236,.50),rgba(247,242,236,.50)),url("/images/rsvp-botanical.svg");
-  background-position:center top;
-  background-repeat:repeat-y;
-  background-size:cover;
+  position: relative;
+  isolation: isolate;
+  background: var(--cream);
 }
-.rsvpBackdrop>.shell {position:relative;z-index:1}
-.rsvpBackdrop .form {background:rgba(255,253,249,.94);backdrop-filter:blur(3px)}
+.rsvpBackdrop::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/images/rsvp-invitation-sans-texte.jpg"), url("/images/rsvp-botanical.svg");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: .42;
+}
+.rsvpBackdrop > .shell {position: relative; z-index: 1}
+.rsvpBackdrop .form {
+  background: rgba(255,253,249,.94);
+  backdrop-filter: blur(3px);
+}
 /* Galerie : légendes visibles sur survol clavier et téléphone. */
 .galleryItem {position:relative;margin:0 0 16px;break-inside:avoid;overflow:hidden;border-radius:5px;background:var(--paper)}
 .galleryItem img {margin:0;width:100%;display:block;height:auto}
