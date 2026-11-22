@@ -287,6 +287,13 @@ export default function PhotoUploader() {
         return;
       }
 
+      // Notification facultative; un échec ne bloque jamais l’envoi de la photo.
+      try {
+        await fetch("/api/photos/notify", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({path})});
+      } catch (error) {
+        console.warn("Photo notification unavailable",error);
+      }
+
       setName("");
       setCaption("");
       setFile(null);
